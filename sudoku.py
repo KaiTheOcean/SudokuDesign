@@ -53,7 +53,6 @@ def position_check(position):
         position_list[0] = letter_dictionary[position_list[0]]
     return position_list
 
-
 def row_check(board):
     for row in board:
         if len(set(row)) == len(row):
@@ -97,9 +96,9 @@ def displayBoard(board):
                 print(board[row][column] or ' ', end='', sep = separator)
 
 def update_board(position_list, value, board):
-    # column = int((position_list[0]))
-    # row = int((position_list[1]))
-    board[0][0] == value  
+    column = int((position_list[0]))
+    row = int((position_list[1]))
+    board[row-1][column] = value 
     return board
 
 fileName = getFile()
