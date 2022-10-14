@@ -1,20 +1,35 @@
+# 1. Name:
+#      Kaidi Zhang
+# 2. Assignment Name:
+#      Lab 05 : Sudoku Draft
+# 3. Assignment Description:
+#      For now this program will allow users to input data, and 
+#      the system will save the data will the user quites the game
+# 4. What was the hardest part? Be as specific as possible.
+#      The hardest part was to display the board in the right format
+# 5. How long did it take for you to complete the assignment?
+#      Maybe 2 hours
+
 import json
 
 def getFile():
+    '''Receive the file according to the difficulty from user'''
+
     difficulty = ''
     while difficulty != "easy" or difficulty != "medium" or difficulty != "hard":
         difficulty = input("Which difficulty would you like to play? [easy, medium, hard] ")
-        if difficulty.lower() == "easy":
+        if difficulty.lower() == "easy": # Easy difficulty
             return "131.05.Easy.json"
-        elif difficulty.lower() == "medium":
+        elif difficulty.lower() == "medium": # Medium difficulty
             return "131.05.Medium.json"
-        elif difficulty.lower() == "hard":
+        elif difficulty.lower() == "hard": # Hard difficulty
             return "131.05.Medium.json"
         else: 
             print("You have enter the wrong input")
             print("Please enter it again")
 
 def readFile(fileName):
+    '''Convert the json file into a list'''
     with open(fileName, "r") as file:
         data = json.load(file)
     board = data["board"]
@@ -25,7 +40,7 @@ def readFile(fileName):
     return board
 
 def saveFile(fileName, board):
-
+    '''Save the board into a json file'''
     data = {
         "board": board
     }
@@ -109,10 +124,22 @@ def update_board(position_list, value, board):
     board[row-1][column] = value 
     return board
 
-fileName = getFile()
-board = readFile(fileName)
-displayBoard(board)
-position = input("Type a position: ")
-positoin_list = position_check(position)
-value = input("What is the value for that position: ")
-print(update_board(positoin_list, value, board))
+def playGame():
+    fileName = getFile()
+    board = readFile(fileName)
+    displayBoard(board)
+    while True:
+        print("Specify a coordinate to edit or 'Q' to save and quit: ")
+        position = input("-> ")
+        if position.upper() == "Q":
+            return False
+        else:
+            positoin_list = position_check(position)
+            value = int(input("What number goes in " + position + " ? "))
+            update_board(positoin_list, value, board)
+            displayBoard(board)
+            saveFile(fileName, board)
+
+playGame()
+
+# Test Cases: B8 - 8, E5 - 8, and quit save the board
