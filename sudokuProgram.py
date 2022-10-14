@@ -100,11 +100,9 @@ def displayBoard(board):
     print("   A  B  C D  E  F G  H  I ")
     for row in range(len(board)):
         for column in range(len(board)):
-            # print(board[row][column])
-            print(row)
-        # print(f"{row+1}  {board[row][0]}  {board[row][1]}  {board[row][2]}|{board[row][3]}  {board[row][4]}  {board[row][5]}|{board[row][6]}  {board[row][7]}  {board[row][8]}")
-        # if row+1 == 3 or row+1 == 6:
-        #     print("  - - - - +- - - - +- - - -") 
+            print(f"{row+1}  {board[row][0]}  {board[row][1]}  {board[row][2]}|{board[row][3]}  {board[row][4]}  {board[row][5]}|{board[row][6]}  {board[row][7]}  {board[row][8]}")
+            if row+1 == 3 or row+1 == 6:
+                print("  - - - - +- - - - +- - - -") 
 
 fileName = getFile()
 board = readFile(fileName)

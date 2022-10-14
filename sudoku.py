@@ -18,9 +18,14 @@ def readFile(fileName):
     with open(fileName, "r") as file:
         data = json.load(file)
     board = data["board"]
+    for row in range(len(board)):
+        for column in range(len(board)):
+            if board[row][column] == 0:
+                board[row][column] = ' '
     return board
 
 def saveFile(fileName, board):
+
     data = {
         "board": board
     }
@@ -82,18 +87,21 @@ def column_check(board):
 
 def displayBoard(board):
     print()
-    print("   A  B  C D  E  F G  H  I ")
+    print("   A  B  C  D  E  F  G  H  I ")
     for row in range(9):
         if row == 3 or row == 6:
-            print("- - + - - + - - +")
+            print("  - - - - + - - - - + - - - - +")
+            print(row+1, end='')
         else:
             print(row+1, end='')
         for column in range(10):
-            separator = "   |    | \n"
             if column == 9:
                 print(sep='\n')
+            elif column == 3 or column == 6:
+                print("|", end='')
+                print(str(board[row][column]).rjust(2), end='')
             else:
-                print(board[row][column] or ' ', end='', sep = separator)
+                print(str(board[row][column]).rjust(3), end='')
 
 def update_board(position_list, value, board):
     column = int((position_list[0]))
