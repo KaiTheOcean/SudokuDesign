@@ -183,7 +183,7 @@ def playGame():
             return False
         else:
             position_list = position_check(position)
-            print(column_hint(board, position_list))
+            # print(column_hint(board, position_list))
             value = int(input("What number goes in " + position + " ? "))
             print()
             sqaure_filled(board, position_list)
