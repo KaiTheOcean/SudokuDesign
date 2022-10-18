@@ -60,15 +60,15 @@ def position_check(position):
     for i in position_list:
         if position_list[0].isdigit():
             position_list[0], position_list[1] = position_list[1], position_list[0]
-    letter_dictionary = {"A": "0",
-                       "B": "1",
-                       "C": "2",
-                       "D": "3",
-                       "E": "4",
-                       "F": "5",
-                       "G": "6",
-                       "H": "7",
-                       "I": "8"}
+    letter_dictionary = {"A": 0,
+                       "B": 1,
+                       "C": 2,
+                       "D": 3,
+                       "E": 4,
+                       "F": 5,
+                       "G": 6,
+                       "H": 7,
+                       "I": 8}
     if position_list[0] in letter_dictionary.keys():
         position_list[0] = letter_dictionary[position_list[0]]
     return position_list
@@ -100,6 +100,47 @@ def column_check(board):
         cols = []
     return True
 
+def column_hint(board, position_list):
+    '''Give the user hint of what are the available numbers for this column'''
+
+    # Create a check list 
+    check_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    # Get the user selected position's column value
+    current_column_index = int(position_list[0])
+    current_column_value = []
+    for row in range(9):
+        current_column_value.append(board[row][current_column_index])
+
+    # compare with the check list and remove duplicates
+    for i in range(len(current_column_value)):
+        if current_column_value[i] in check_list:
+            check_list.remove(current_column_value[i])
+
+    # It returns all the posibile value for the column
+    return check_list
+
+def row_hint(board, position_list):
+    '''Give the user hint of what are the available numbers for this row'''
+
+    # Create a check list
+    check_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    # Get the user selected position's row value
+    current_row_index = int(position_list[1])
+    current_row_value = board[current_row_index - 1]
+
+    # Compare with check list, and remove the duplicates
+    for i in range(len(current_row_value)):
+        if current_row_value[i] in check_list:
+            check_list.remove(current_row_value[i])
+
+    # It returns all the possible value for the row
+    return check_list
+    
+def square_hint():
+    pass
+
 def displayBoard(board):
     print()
     print("   A  B  C  D  E  F  G  H  I ")
@@ -124,6 +165,13 @@ def update_board(position_list, value, board):
     board[row-1][column] = value 
     return board
 
+def sqaure_filled(board, position_list):
+    '''Check if the position is already filled'''
+    column = int(position_list[0])
+    row = int(position_list[1])
+    if board[column][row] != " ":
+        print("You can't enter in this position!")
+        
 def playGame():
     fileName = getFile()
     board = readFile(fileName)
@@ -134,11 +182,14 @@ def playGame():
         if position.upper() == "Q":
             return False
         else:
-            positoin_list = position_check(position)
+            position_list = position_check(position)
+            print(column_hint(board, position_list))
             value = int(input("What number goes in " + position + " ? "))
-            update_board(positoin_list, value, board)
+            print()
+            sqaure_filled(board, position_list)
+            update_board(position_list, value, board)
             displayBoard(board)
-            saveFile(fileName, board)
+            # saveFile(fileName, board)
 
 playGame()
 
