@@ -1,14 +1,13 @@
 # 1. Name:
 #      Kaidi Zhang
 # 2. Assignment Name:
-#      Lab 05 : Sudoku Draft
+#      Lab 06 : Sudoku Program
 # 3. Assignment Description:
-#      For now this program will allow users to input data, and 
-#      the system will save the data will the user quites the game
+#      This program will allow player to play the sudoku game
 # 4. What was the hardest part? Be as specific as possible.
-#      The hardest part was to display the board in the right format
+#       
 # 5. How long did it take for you to complete the assignment?
-#      Maybe 2 hours
+#      
 
 import json
 
@@ -92,7 +91,7 @@ def row_check(board):
 
 def column_check(board): 
     '''Check to see the column is complete or not'''
-    
+
     cols = []
     check = []
     for i in range(1, len(board)+1):
@@ -244,23 +243,141 @@ def sqaure_filled(board, position_list):
     row = int(position_list[1])
     if board[column][row] != " ":
         print("You can't enter in this position!")
-        
+    else:
+        return True
+
+def invalid_number(value):
+    '''make sure the user only enter the value from 1 - 10''' 
+
+    check_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    if value in check_list:
+        return True
+    else:
+        print("Please enter an integer which is between 1 - 10.")      
+
+def invalid_input(position):
+    letter_check = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
+    number_check = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    if position.lower() == "q" and position.lower() == "s":
+        return True
+    elif position[0] in letter_check and position[1] in number_check:
+        return True
+    elif position[1] in letter_check and position[0] in number_check:
+        return True
+    else:
+        print("Make sure you enter the correct information (rihgt coordinates, \
+            q to quite, or s for hint")
+
+def unique_row(board, value, position_list):
+    '''Check to make sure the value isn't matching the numbers on this row'''
+
+    row_index = int(position_list[1])
+    row_index = row_index - 1
+    current_row = []
+    for column in range(9):
+        current_row.append(board[row_index][column])
+    if value not in current_row:
+        return True
+    else:
+        print(value + " is already exist in this row")
+        return False
+
+def unique_column(board, value, position_list):
+    '''Check to make sure the value isn't matching the numbers on this column'''
+    column_index = int(position_list[0])
+    current_column = []
+    for row in range(9):
+        current_column.append(board[row][column_index])
+    if value not in current_column:
+        return True
+    else:
+        print(value + " is already exist in this column")
+        return False
+
+def unique_inside_sqaure(board, value, position_list):
+    '''Check to make sure the value isn't matching the numers in this sqaure'''
+
+    # Set the variables
+    column_index = int(position_list[0])
+    row_index = int(position_list[1])
+    column_index = column_index + 1
+    row_index = row_index
+
+    # Use if statement to defualt the row, column indexes
+    if 1 <= row_index <= 3:
+        row_index = 3
+    elif 4 <= row_index <= 6:
+        row_index = 6
+    elif 7 <= row_index <= 9:
+        row_index = 9
+
+    if 1 <= column_index <= 3:
+        column_index = 3
+    elif 4 <= column_index <= 6:
+        column_index = 6
+    elif 7 <= column_index <= 9:
+        column_index = 9
+
+    # Store the selected square's value into a list
+    square_value = []
+    for i in range(row_index-3, row_index):
+        for j in range(column_index-3, column_index):
+            square_value.append(board[i][j])
+
+    if value not in square_value:
+        return True
+    else:
+        print(value + " is already exist in this square")
+        return False
+
 def playGame():
+    '''Start the game'''
+
+    # Receive the file name and display it as a sudoku broad
     fileName = getFile()
     board = readFile(fileName)
     displayBoard(board)
+
+
     while True:
-        print("Specify a coordinate to edit or 'Q' to save and quit: ")
+
+        # Ask the user for either a coordinate or Q to quie or S for hint
+        print("Specify a coordinate to edit ,'q' to save and quit, or 's' for hint: ")
         position = input("-> ")
-        if position.upper() == "Q":
+
+        # Valid the position
+        invalid_input(position)
+
+        # Convert the position into a useful list
+        position_list = position_check(position)
+
+        # Quit the game
+        if position.lower() == "q":
+            # saveFile(fileName, board)
             return False
+
+        # Show the hint
+        elif position.lower() == "s":
+            print(hint())
         else:
-            position_list = position_check(position)
-            value = int(input("What number goes in " + position + " ? "))
-            print()
+
+            # Check if the suqare is been filled or not
             sqaure_filled(board, position_list)
+
+            # Ask for what value goes into that square
+            value = int(input("What number goes in " + position + " ? "))
+
+            # Valid the value from the user
+            invalid_number(value)
+            print()
+
+            # Do updates on the board
             update_board(position_list, value, board)
+
+            # Display the board
             displayBoard(board)
+
+            # Save the file
             # saveFile(fileName, board)
 
 playGame()
