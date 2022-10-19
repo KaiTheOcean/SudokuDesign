@@ -30,6 +30,7 @@ def getFile():
 
 def readFile(fileName):
     '''Convert the json file into a list'''
+
     with open(fileName, "r") as file:
         data = json.load(file)
     board = data["board"]
@@ -41,6 +42,7 @@ def readFile(fileName):
 
 def saveFile(fileName, board):
     '''Save the board into a json file'''
+
     data = {
         "board": board
     }
@@ -54,6 +56,7 @@ def position_check(position):
        the first element in the position list 
        is always the column and the second element 
        is always the row'''
+
     position_list = []
     for i in position:
         position_list.append(i.upper())
@@ -74,6 +77,8 @@ def position_check(position):
     return position_list
 
 def row_check(board):
+    '''Check the row to see if is complete'''
+
     for row in board:
         if len(set(row)) == len(row):
             for i in range(len(row)):
@@ -86,6 +91,8 @@ def row_check(board):
     return True
 
 def column_check(board): 
+    '''Check to see the column is complete or not'''
+    
     cols = []
     check = []
     for i in range(1, len(board)+1):
@@ -138,15 +145,77 @@ def row_hint(board, position_list):
     # It returns all the possible value for the row
     return check_list
     
-def square_hint():
-    pass
+def square_hint(board, position_list):
+    '''Give the user hint of the available numbers for this square'''
 
+    # Set the variables and check list
+    column_index = int(position_list[0])
+    row_index = int(position_list[1])
+    column_index = column_index + 1
+    row_index = row_index
+    check_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    # Use if statement to defualt the row, column indexes
+    if 1 <= row_index <= 3:
+        row_index = 3
+    elif 4 <= row_index <= 6:
+        row_index = 6
+    elif 7 <= row_index <= 9:
+        row_index = 9
+
+    if 1 <= column_index <= 3:
+        column_index = 3
+    elif 4 <= column_index <= 6:
+        column_index = 6
+    elif 7 <= column_index <= 9:
+        column_index = 9
+
+    # Store the selected square's value into a list
+    square_value = []
+    for i in range(row_index-3, row_index):
+        for j in range(column_index-3, column_index):
+            square_value.append(board[i][j])
+
+    # Compare the sqaure_value with the check list 
+    for i in range(len(square_value)):
+        if square_value[i] in check_list:
+            check_list.remove(square_value[i])
+
+    # It returns all the possible value for the square
+    return check_list
+
+def hint(board, position_list):
+    '''It finds out the possible value according to its 
+       row, column and sqaure'''
+
+    # Get row value, column value, and square value
+    row_hint_list = row_hint(board, position_list)
+    column_hint_list = column_hint(board, position_list)
+    square_hint_list = square_hint(board, position_list)
+
+    # Set check list to compare
+    check_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    # Put all the possible values togehter and compare it with check list 
+    # If all three hint list's elements are in check list then save them
+    # otherwise remove them.
+    hint_list = []
+    for check in check_list:
+        if (check in row_hint_list) and (check in column_hint_list) \
+            and (check in square_hint_list):
+            hint_list.append(check)
+    return hint_list
+    
 def displayBoard(board):
+    '''Display the board for user'''
     print()
     print("   A  B  C  D  E  F  G  H  I ")
+
+    # Within a for loop, do the following when it meets the 
+    # if statement conditions
     for row in range(9):
         if row == 3 or row == 6:
-            print("  - - - - + - - - - + - - - - +")
+            print("  - - - - + - - - -+ - - - - ")
             print(row+1, end='')
         else:
             print(row+1, end='')
@@ -160,6 +229,9 @@ def displayBoard(board):
                 print(str(board[row][column]).rjust(3), end='')
 
 def update_board(position_list, value, board):
+    '''Update the board according to the user's input 
+        position and value'''
+
     column = int((position_list[0]))
     row = int((position_list[1]))
     board[row-1][column] = value 
@@ -167,6 +239,7 @@ def update_board(position_list, value, board):
 
 def sqaure_filled(board, position_list):
     '''Check if the position is already filled'''
+
     column = int(position_list[0])
     row = int(position_list[1])
     if board[column][row] != " ":
@@ -183,7 +256,6 @@ def playGame():
             return False
         else:
             position_list = position_check(position)
-            # print(column_hint(board, position_list))
             value = int(input("What number goes in " + position + " ? "))
             print()
             sqaure_filled(board, position_list)
