@@ -203,7 +203,8 @@ def hint(board, position_list):
         if (check in row_hint_list) and (check in column_hint_list) \
             and (check in square_hint_list):
             hint_list.append(check)
-    return hint_list
+    print("The available values are: " + str(hint_list))
+    return True
     
 def displayBoard(board):
     '''Display the board for user'''
@@ -241,32 +242,25 @@ def sqaure_filled(board, position_list):
 
     column = int(position_list[0])
     row = int(position_list[1])
-    if board[column][row] != " ":
+    row = row - 1
+    if board[row][column] != " ":
         print("You can't enter in this position!")
+        return False
     else:
         return True
 
-def invalid_number(value):
-    '''make sure the user only enter the value from 1 - 10''' 
-
-    check_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    if value in check_list:
-        return True
-    else:
-        print("Please enter an integer which is between 1 - 10.")      
-
-def invalid_input(position):
+def valid_input(position):
     letter_check = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
-    number_check = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    if position.lower() == "q" and position.lower() == "s":
+    number_check = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    if position.lower() == "q":
         return True
-    elif position[0] in letter_check and position[1] in number_check:
-        return True
-    elif position[1] in letter_check and position[0] in number_check:
+    elif position[0].upper() in letter_check and position[1] in number_check:
+        return True   
+    elif position[1].upper() in letter_check and position[0] in number_check:
         return True
     else:
-        print("Make sure you enter the correct information (rihgt coordinates, \
-            q to quite, or s for hint")
+        print("Make sure you enter the correct information (rihgt coordinates, and q to quite)")
+        return False
 
 def unique_row(board, value, position_list):
     '''Check to make sure the value isn't matching the numbers on this row'''
@@ -279,7 +273,7 @@ def unique_row(board, value, position_list):
     if value not in current_row:
         return True
     else:
-        print(value + " is already exist in this row")
+        print(str(value) + " is already exist in this row")
         return False
 
 def unique_column(board, value, position_list):
@@ -291,7 +285,7 @@ def unique_column(board, value, position_list):
     if value not in current_column:
         return True
     else:
-        print(value + " is already exist in this column")
+        print(str(value) + " is already exist in this column")
         return False
 
 def unique_inside_sqaure(board, value, position_list):
@@ -327,8 +321,27 @@ def unique_inside_sqaure(board, value, position_list):
     if value not in square_value:
         return True
     else:
-        print(value + " is already exist in this square")
+        print(str(value) + " is already exist in this square")
         return False
+
+def valid_number(board, value, position_list):
+    '''make sure the user only enter the value from 1 - 9''' 
+    value = int(value)
+    check_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    if value in check_list:
+        return True
+    elif value <= 0 or value >= 10:
+        print("Make sure the value is in between 1 and 9")
+        return False
+    elif unique_row(board, value, position_list):
+        return True 
+    elif unique_column(board, value, position_list):
+        return True
+    elif unique_inside_sqaure(board, value, position_list):
+        return 
+    else:
+        print("Please only enter the number that is from 1- 9 and no \
+            duplicates from the row, column and inside-square")
 
 def playGame():
     '''Start the game'''
@@ -336,50 +349,51 @@ def playGame():
     # Receive the file name and display it as a sudoku broad
     fileName = getFile()
     board = readFile(fileName)
-    displayBoard(board)
-
 
     while True:
-
+        displayBoard(board)
         # Ask the user for either a coordinate or Q to quie or S for hint
-        print("Specify a coordinate to edit ,'q' to save and quit, or 's' for hint: ")
+        print("Specify a coordinate to edit ,'q' to save and quit ")
         position = input("-> ")
-
+        print()
         # Valid the position
-        invalid_input(position)
+        if not valid_input(position):
+            continue
 
         # Convert the position into a useful list
         position_list = position_check(position)
 
+        # Check if the suqare is been filled or not
+        if not sqaure_filled(board, position_list):
+            continue
+
         # Quit the game
         if position.lower() == "q":
             # saveFile(fileName, board)
+            print("See you next time!")
             return False
 
-        # Show the hint
-        elif position.lower() == "s":
-            print(hint())
         else:
 
-            # Check if the suqare is been filled or not
-            sqaure_filled(board, position_list)
+                # Ask for what value goes into that square
+                value = input("What number goes in " + position + " ? or (type s for hint) ")
 
-            # Ask for what value goes into that square
-            value = int(input("What number goes in " + position + " ? "))
+                # Show the hint
+                if value.lower() == "s":
+                    hint(board, position_list)
 
-            # Valid the value from the user
-            invalid_number(value)
-            print()
+                # Valid the value from the user
+                if not valid_number(board, value, position_list):
+                    continue
+                
+                # Do updates on the board
+                update_board(position_list, value, board)
 
-            # Do updates on the board
-            update_board(position_list, value, board)
+                # Display the board
+                displayBoard(board)
 
-            # Display the board
-            displayBoard(board)
-
-            # Save the file
-            # saveFile(fileName, board)
+                # Save the file
+                # saveFile(fileName, board)
 
 playGame()
 
-# Test Cases: B8 - 8, E5 - 8, and quit save the board

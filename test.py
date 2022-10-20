@@ -11,7 +11,7 @@
 # # board[0][0] = "a"
 # # print(board)
 
-# # board = [[7, 2, 3, " ", " ", " ", 1, 5, 9], [6, " ", " ", 3, " ", 2, " ", " ", 8], [0, 0, 0, 0]]
+# board = [[7, 2, 3, " ", " ", " ", 1, 5, 9], [6, " ", " ", 3, " ", 2, " ", " ", 8], [0, 0, 0, 0]]
 # # position = [2, 2]
 # # column_index = position[1]
 # # column_value = []
@@ -19,6 +19,7 @@
 # #     column_value.append(board[i][column_index])
 # # print(column_value)
 # import json 
+import json
 
 # def getFile():
 #     '''Receive the file according to the difficulty from user'''
@@ -65,10 +66,23 @@
 #             else:
 #                 print(str(board[row][column]).rjust(3), end='')
 
+# def unique_column(board, value, position_list):
+#     '''Check to make sure the value isn't matching the numbers on this column'''
+#     column_index = int(position_list[0])
+#     current_column = []
+#     for row in range(9):
+#         current_column.append(board[row][column_index])
+#     if value not in current_column:
+#         return True
+#     else:
+#         print(str(value) + " is already exist in this column")
+#         return False
+
 # fileName = getFile()
 # board = readFile(fileName)
 # print(board)
 # displayBoard(board)
+# unique_column(board, 7, "03")
 
 # # first square
 # # row = 3
@@ -107,9 +121,10 @@
 #             check_list.remove(list[i])
 # print(check_list)
 
-s = "a1"
-print(s[0].upper())
-if s[0].upper() == "A":
-    print("Hi")
+# s = input(" ")
+# print(s.upper())
+# list = ["A"]
+# if s[0].upper() in list:
+#     print("Hi")
 
 
