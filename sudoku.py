@@ -234,7 +234,7 @@ def update_board(position_list, value, board):
 
     column = int((position_list[0]))
     row = int((position_list[1]))
-    board[row-1][column] = value 
+    board[row-1][column] = int(value)
     return board
 
 def sqaure_filled(board, position_list):
