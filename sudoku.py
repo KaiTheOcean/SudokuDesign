@@ -328,20 +328,19 @@ def valid_number(board, value, position_list):
     '''make sure the user only enter the value from 1 - 9''' 
     value = int(value)
     check_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    if value in check_list:
-        return True
-    elif value <= 0 or value >= 10:
+    if value <= 0 or value >= 10:
         print("Make sure the value is in between 1 and 9")
         return False
-    elif unique_row(board, value, position_list):
-        return True 
-    elif unique_column(board, value, position_list):
-        return True
-    elif unique_inside_sqaure(board, value, position_list):
-        return 
+    if unique_row(board, value, position_list):
+        if unique_column(board, value, position_list):
+            if unique_inside_sqaure(board, value, position_list):
+                return True
+            else:
+                return False
+        else:
+            return False
     else:
-        print("Please only enter the number that is from 1- 9 and no \
-            duplicates from the row, column and inside-square")
+        return False
 
 def playGame():
     '''Start the game'''
@@ -349,13 +348,21 @@ def playGame():
     # Receive the file name and display it as a sudoku broad
     fileName = getFile()
     board = readFile(fileName)
+    displayBoard(board)
 
     while True:
-        displayBoard(board)
+        
         # Ask the user for either a coordinate or Q to quie or S for hint
         print("Specify a coordinate to edit ,'q' to save and quit ")
         position = input("-> ")
         print()
+
+        # Quit the game
+        if position.lower() == "q":
+            # saveFile(fileName, board)
+            print("See you next time!")
+            return False
+
         # Valid the position
         if not valid_input(position):
             continue
@@ -367,33 +374,28 @@ def playGame():
         if not sqaure_filled(board, position_list):
             continue
 
-        # Quit the game
-        if position.lower() == "q":
-            # saveFile(fileName, board)
-            print("See you next time!")
-            return False
-
         else:
 
-                # Ask for what value goes into that square
-                value = input("What number goes in " + position + " ? or (type s for hint) ")
+            # Ask for what value goes into that square
+            value = input("What number goes in " + position + " ? or (type s for hint) ")
 
-                # Show the hint
-                if value.lower() == "s":
-                    hint(board, position_list)
+            # Show the hint
+            if value.lower() == "s":
+                hint(board, position_list)
+                continue
 
-                # Valid the value from the user
-                if not valid_number(board, value, position_list):
-                    continue
-                
-                # Do updates on the board
-                update_board(position_list, value, board)
+            # Valid the value from the user
+            if not valid_number(board, value, position_list):
+                continue
+            
+            # Do updates on the board
+            update_board(position_list, value, board)
 
-                # Display the board
-                displayBoard(board)
+            # Display the board
+            displayBoard(board)
 
-                # Save the file
-                # saveFile(fileName, board)
+            # Save the file
+            saveFile(fileName, board)
 
 playGame()
 
