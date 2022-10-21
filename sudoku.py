@@ -5,27 +5,17 @@
 # 3. Assignment Description:
 #      This program will allow player to play the sudoku game
 # 4. What was the hardest part? Be as specific as possible.
-#       
+#       The hardest part was to put all the functions together
 # 5. How long did it take for you to complete the assignment?
-#      
+#      It took me about 4 hours to finish
 
 import json
 
 def getFile():
     '''Receive the file according to the difficulty from user'''
-
-    difficulty = ''
-    while difficulty != "easy" or difficulty != "medium" or difficulty != "hard":
-        difficulty = input("Which difficulty would you like to play? [easy, medium, hard] ")
-        if difficulty.lower() == "easy": # Easy difficulty
-            return "131.05.Easy.json"
-        elif difficulty.lower() == "medium": # Medium difficulty
-            return "131.05.Medium.json"
-        elif difficulty.lower() == "hard": # Hard difficulty
-            return "131.05.Medium.json"
-        else: 
-            print("You have enter the wrong input")
-            print("Please enter it again")
+    
+    file = input("Type you file to load the board? ")
+    return file
 
 def readFile(fileName):
     '''Convert the json file into a list'''
@@ -356,7 +346,7 @@ def playGame():
         print("Specify a coordinate to edit ,'q' to save and quit ")
         position = input("-> ")
         print()
-
+    
         # Quit the game
         if position.lower() == "q":
             # saveFile(fileName, board)
@@ -397,5 +387,20 @@ def playGame():
             # Save the file
             saveFile(fileName, board)
 
-playGame()
+if __name__ == "__main__":
+    playGame()
 
+# 88
+# AA
+# Z1
+# A10
+# A9
+# A1
+# I1
+# A9
+# I9
+# E5
+# h2
+# 3H
+# s
+# q

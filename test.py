@@ -128,3 +128,19 @@ import json
 #     print("Hi")
 
 
+# def dollarFromEuro(euro):
+#     assert euro >= 0, "It gotta be equal or greater than 0"
+#     return 1.13 * euro
+
+# print(dollarFromEuro(-1))
+
+# Test Cases 
+# negative euro, gives me error
+# 
+
+def computePay(wage, hours):
+    if 0 <= hours <= 40:
+        return wage * hours
+    elif 168 >= hours > 40:
+        return (wage * 40) + wage * 1.5 * (hours - 40)
+
